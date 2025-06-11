@@ -1,6 +1,6 @@
 fastapi
 uvicorn
-pydantic
 jinja2
-huggingface_hub
 scikit-learn
+pydantic
+sklearn-crfsuite
