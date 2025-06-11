@@ -7,7 +7,7 @@ app = FastAPI()
 
 # Load model from Hugging Face Hub
 model_path = hf_hub_download(
-    repo_id="23IT137/tamil-ner-app",  # ✅ Replace with your repo
+    repo_id="23IT137/tamil-ner-app",  # ✅ Replace with your repo if different
     filename="tamil_ner_model.pkl"
 )
 
@@ -16,6 +16,11 @@ with open(model_path, "rb") as f:
 
 class TextInput(BaseModel):
     text: str
+
+# ✅ Root endpoint to avoid 404 error
+@app.get("/")
+def read_root():
+    return {"message": "✅ Tamil NER API is live and ready to predict!"}
 
 @app.post("/predict")
 def predict_ner(input: TextInput):
