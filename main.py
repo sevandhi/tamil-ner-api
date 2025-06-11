@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Form
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
@@ -102,14 +102,25 @@ def predict_paragraph(paragraph):
     return all_results
 
 # ==== Routes ====
+
 @app.get("/", response_class=HTMLResponse)
 async def index(request: Request):
     return templates.TemplateResponse("index.html", {"request": request, "results": []})
 
+@app.head("/")  # Suppress 405 for HEAD requests
+async def root_head():
+    return HTMLResponse()
+
+@app.get("/favicon.ico")  # Suppress 404 favicon error
+async def favicon():
+    return HTMLResponse(status_code=204)
+
 @app.post("/", response_class=HTMLResponse)
 async def predict(request: Request):
     form_data = await request.form()
-    paragraph = form_data["paragraph"]
+    paragraph = form_data.get("paragraph", "")
+    if not paragraph:
+        return templates.TemplateResponse("index.html", {"request": request, "results": [], "error": "No text provided."})
     results = predict_paragraph(paragraph)
     return templates.TemplateResponse("index.html", {"request": request, "results": results})
 

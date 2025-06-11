@@ -6,3 +6,4 @@ pandas
 openpyxl
 flask
 jinja2
+python-multipart
