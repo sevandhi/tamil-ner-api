@@ -1,13 +1,14 @@
 from fastapi import FastAPI
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from huggingface_hub import hf_hub_download
 import pickle
 
 app = FastAPI()
 
-# Load model from Hugging Face Hub
+# Load CRF model
 model_path = hf_hub_download(
-    repo_id="23IT137/tamil-ner-app",  # ✅ Replace with your repo if different
+    repo_id="23IT137/tamil-ner-app",
     filename="tamil_ner_model.pkl"
 )
 
@@ -17,10 +18,10 @@ with open(model_path, "rb") as f:
 class TextInput(BaseModel):
     text: str
 
-# ✅ Root endpoint to avoid 404 error
-@app.get("/")
+# ✅ Allow both GET and HEAD for the root route
+@app.api_route("/", methods=["GET", "HEAD"])
 def read_root():
-    return {"message": "✅ Tamil NER API is live and ready to predict!"}
+    return JSONResponse(content={"message": "✅ Tamil NER API is live and ready to predict!"})
 
 @app.post("/predict")
 def predict_ner(input: TextInput):
