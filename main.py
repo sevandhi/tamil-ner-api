@@ -3,17 +3,16 @@ from pydantic import BaseModel
 from huggingface_hub import hf_hub_download
 import pickle
 
-# ✅ Download model from Hugging Face Hub
+app = FastAPI()
+
+# Load model from Hugging Face Hub
 model_path = hf_hub_download(
-    repo_id="23IT137/tamil-ner-app",  # <- Updated to your actual Hugging Face repo ID
-    filename="tamil_ner_model.pkl"    # <- Must match the file name in Hugging Face
+    repo_id="23IT137/tamil-ner-app",  # ✅ Replace with your repo
+    filename="tamil_ner_model.pkl"
 )
 
-# ✅ Load the CRF model
 with open(model_path, "rb") as f:
     crf_model = pickle.load(f)
-
-app = FastAPI()
 
 class TextInput(BaseModel):
     text: str

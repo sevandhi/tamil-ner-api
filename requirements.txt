@@ -2,4 +2,5 @@ fastapi
 uvicorn
 pydantic
 huggingface_hub
+scikit-learn
 sklearn-crfsuite
